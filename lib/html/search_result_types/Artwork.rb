@@ -6,4 +6,8 @@ class Artwork
     @year = year
     @link = link
   end
+
+  def self.heading
+    @@heading
+  end
 end
