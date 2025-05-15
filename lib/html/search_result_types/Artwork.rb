@@ -1,6 +1,5 @@
 class Artwork
   @@heading = 'Artworks'
-  @@number_of_fields = 3
 
   def initialize(name, year, link)
     @name = name
@@ -22,5 +21,13 @@ class Artwork
 
   def link
     @link
+  end
+
+  def to_h
+    {
+      name: @name,
+      year: @year,
+      link: @link
+    }
   end
 end

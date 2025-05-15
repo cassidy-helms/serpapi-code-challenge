@@ -7,3 +7,5 @@ source "https://rubygems.org"
 gem "nokogiri", "~> 1.18"
 
 gem "rspec", "~> 3.13"
+gem "json", "~> 2.12"
+
