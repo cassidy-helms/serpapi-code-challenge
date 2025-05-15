@@ -5,16 +5,14 @@ class HtmlParser
     ARTWORKS = 'Artworks'
   end
 
-  def self.parse(line)
+  def self.parse(line, results)
     parse_type = determineParseType(line)
 
     if(parse_type == ParseTypes::ARTWORKS)
-      artworks = parseArtworks(line)
-      # artworks.each { |artwork|
-      #   puts "#{artwork.name}, #{artwork.year}, #{artwork.link}"
-      # }
-      return artworks
+      results.artworks.concat(parseArtworks(line))
     end
+
+    results
   end
 
   def self.determineParseType(line)

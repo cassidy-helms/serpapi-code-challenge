@@ -7,7 +7,7 @@ class SearchResults
 
   def to_h
     {
-      artworks: @artworks
+      artworks: @artworks.map { |artwork| artwork.respond_to?(:to_h) ? artwork.to_h : artwork }
     }
   end
 end

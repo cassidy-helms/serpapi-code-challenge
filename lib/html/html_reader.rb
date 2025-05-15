@@ -1,15 +1,15 @@
 require 'nokogiri'
 require_relative 'html_parser'
 require_relative 'json/json_exporter'
+require_relative 'search_result_types/search_results'
 
 class HtmlReader
   def read(path)
-    results = []
+    results = SearchResults.new
     File.foreach(path) { |line|
-      parsed = HtmlParser.parse(line)
-      results << parsed if parsed
+      results = HtmlParser.parse(line, results)
     }
-    results.flatten
+    results
   end
 end
 
