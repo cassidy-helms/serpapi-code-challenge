@@ -1,9 +1,9 @@
 class Artwork
   @@heading = 'Artworks'
 
-  def initialize(name, year, link)
+  def initialize(name, extensions, link)
     @name = name
-    @year = year
+    @extensions = extensions
     @link = link
   end
 
@@ -15,8 +15,8 @@ class Artwork
     @name
   end
 
-  def year
-    @year
+  def extensions
+    @extensions
   end
 
   def link
@@ -26,7 +26,7 @@ class Artwork
   def to_h
     {
       name: @name,
-      year: @year,
+      extensions: @extensions,
       link: @link
     }
   end

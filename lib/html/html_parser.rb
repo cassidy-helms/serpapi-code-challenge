@@ -32,13 +32,14 @@ class HtmlParser
 
           div_texts = a_tag.css('div').map { |div| div.text.strip }
           name = div_texts[1]
-          year = div_texts[2]
+          extensions = [div_texts[2]]
 
-          if [link, name, year].all? { |v| v.to_s.strip != "" }            
-            artworks << Artwork.new(name, year, "https://www.google.com#{link}")
+          if !extensions.empty? && [link, name, extensions[0]].all? { |v| v.to_s.strip != "" }            
+            artworks << Artwork.new(name, extensions, "https://www.google.com#{link}")
           end
         end
       }
       return artworks
   end
+  :private
 end
