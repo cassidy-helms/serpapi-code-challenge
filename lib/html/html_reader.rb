@@ -5,11 +5,8 @@ require_relative 'search_result_types/search_results'
 
 class HtmlReader
   def read(path)
-    results = SearchResults.new
-    File.foreach(path) { |line|
-      results = HtmlParser.parse(line, results)
-    }
-    results
+    html = File.read(path)
+    HtmlParser.parse(html)
   end
 end
 

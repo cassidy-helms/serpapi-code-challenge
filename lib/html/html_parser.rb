@@ -5,7 +5,8 @@ class HtmlParser
     ARTWORKS = 'Artworks'
   end
 
-  def self.parse(line, results)
+  def self.parse(line)
+    results = SearchResults.new
     parse_type = determineParseType(line)
 
     if(parse_type == ParseTypes::ARTWORKS)
