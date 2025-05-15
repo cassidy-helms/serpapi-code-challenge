@@ -1,33 +1,24 @@
 class Artwork
+  attr_reader :name, :extensions, :link, :image
   @@heading = 'Artworks'
 
-  def initialize(name, extensions, link)
+  def initialize(name, extensions, link, image)
     @name = name
     @extensions = extensions
     @link = link
+    @image = image
   end
 
   def self.heading
     @@heading
   end
 
-  def name
-    @name
-  end
-
-  def extensions
-    @extensions
-  end
-
-  def link
-    @link
-  end
-
   def to_h
     {
       name: @name,
       extensions: @extensions,
-      link: @link
+      link: @link,
+      image: @image
     }
   end
 end

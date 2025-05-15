@@ -35,8 +35,13 @@ class HtmlParser
           name = div_texts[1]
           extensions = [div_texts[2]]
 
-          if !extensions.empty? && [link, name, extensions[0]].all? { |v| v.to_s.strip != "" }            
-            artworks << Artwork.new(name, extensions, "https://www.google.com#{link}")
+          image_tag = a_tag.at_css('img')
+          image_src = image_tag['src'] if image_tag
+          image_data_src = image_tag['data-src'] if image_tag
+          image = image_data_src || image_src
+
+          if !extensions.empty? && [link, name, extensions[0], image].all? { |v| v.to_s.strip != "" }            
+            artworks << Artwork.new(name, extensions, "https://www.google.com#{link}", image)
           end
         end
       }
