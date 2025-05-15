@@ -33,7 +33,7 @@ class HtmlParser
 
           div_texts = a_tag.css('div').map { |div| div.text.strip }
           name = div_texts[1]
-          extensions = [div_texts[2]]
+          extensions = div_texts[2..] || []
 
           image_tag = a_tag.at_css('img')
           image_src = image_tag['src'] if image_tag
@@ -41,7 +41,8 @@ class HtmlParser
           image = image_data_src || image_src
           image_id = image_tag['id'] if image_tag
 
-          if !extensions.empty? && [link, name, extensions[0], image].all? { |v| v.to_s.strip != "" }            
+          all_extensions_present = extensions.all? { |ext| ext.to_s.strip != "" }
+          if !extensions.empty? && all_extensions_present && [link, name, image].all? { |v| v.to_s.strip != "" }            
             artworks << Artwork.new(name, extensions, "https://www.google.com#{link}", image, image_id)
           end
         end
