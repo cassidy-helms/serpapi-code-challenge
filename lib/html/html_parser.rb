@@ -1,8 +1,10 @@
 require_relative 'search_result_types/artwork'
+require_relative 'search_result_types/book'
 
 class HtmlParser
   module ParseTypes
-    ARTWORKS = 'Artworks'
+    ARTWORKS = 'Artworks',
+    BOOKS = 'Books'
   end
 
   def self.parse(html)
@@ -10,7 +12,9 @@ class HtmlParser
     parse_type = determine_parse_type(html)
 
     if(parse_type == ParseTypes::ARTWORKS)
-      results.artworks.concat(parse_artworks(html))
+      results.artworks.concat(parse_media(html))
+    elsif(parse_type == ParseTypes::BOOKS)
+      results.books.concat(parse_media(html))
     end
 
     results
@@ -19,18 +23,21 @@ class HtmlParser
   def self.determine_parse_type(html)
     Nokogiri::HTML.parse(html).css('span').each do |span|
       return ParseTypes::ARTWORKS if span.text.strip == Artwork.heading
+      return ParseTypes::BOOKS if span.text.strip == Book.heading
     end
     nil
   end
   private_class_method :determine_parse_type
 
-  def self.parse_artworks(html)
+  def self.parse_media(html)
       artworks = []
       Nokogiri::HTML.parse(html).css('div div a').each {|a_tag| 
         next unless a_tag['href'] =~ /\/search/
 
         link = a_tag['href']
         div_texts = a_tag.css('div').map { |div| div.text.strip }
+        non_blank_divs = div_texts.reject(&:empty?)
+
         name = div_texts[1]
         extensions = div_texts[2..].to_a.reject { |ext| ext.strip.empty? }
 
@@ -45,11 +52,11 @@ class HtmlParser
         end
       }
       
-      retrieve_artwork_image_ids(html, artworks)
+      retrieve_image_ids(html, artworks)
   end
-  private_class_method :parse_artworks
+  private_class_method :parse_media
 
-  def self.retrieve_artwork_image_ids(html, artworks) 
+  def self.retrieve_image_ids(html, artworks) 
     artworks.each {|artwork|
       if artwork.image_id
         doc = Nokogiri::HTML.parse(html).xpath("//script[contains(text(), '#{artwork.image_id}')]")
@@ -61,7 +68,7 @@ class HtmlParser
 
     artworks
   end
-  private_class_method :retrieve_artwork_image_ids
+  private_class_method :retrieve_image_ids
 
   def self.extract_source_variable_from_javascript_string(js_string)
     if js_string =~ /var\s+s\s*=\s*'([^']+)'/

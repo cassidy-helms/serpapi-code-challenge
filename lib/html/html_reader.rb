@@ -11,4 +11,5 @@ class HtmlReader
 end
 
 search_results = HtmlReader.new.read('files\van-gogh-paintings.html')
+#search_results = HtmlReader.new.read('files\stephen-king-books.html')
 JsonExporter.new.export(search_results)
