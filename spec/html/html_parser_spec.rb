@@ -24,16 +24,20 @@ RSpec.describe HtmlParser do
         context "contains img src" do
           let(:artwork_html) do
             <<-HTML
-            <span>Artworks</span>
-            <div>
+            <div jsname="test">
               <div>
-                <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=The+Starry+Night&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiBLFMzC3jC7WUspOt9Msyi0sTc-ITi0qQmJnFJVbl-UXZxYtYBUIyUhWCSxKLiioV_DLTM0oAdKX0-E4AAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAD">
-                  <img class="taFZJe" alt="The Starry Night" id="_L_FkZ4qlAtyDwbkP49Pj0QU_63" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
-                  <div class="KHK6lb">
-                    <div class="pgNMRc">The Starry Night</div>
-                    <div class="cxzHyb">1889</div>
-                  </div>
-                </a>
+                <span>Artworks</span>
+              </div>
+              <div>
+                <div>
+                  <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=The+Starry+Night&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiBLFMzC3jC7WUspOt9Msyi0sTc-ITi0qQmJnFJVbl-UXZxYtYBUIyUhWCSxKLiioV_DLTM0oAdKX0-E4AAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAD">
+                    <img class="taFZJe" alt="The Starry Night" id="_L_FkZ4qlAtyDwbkP49Pj0QU_63" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
+                    <div class="KHK6lb">
+                      <div class="pgNMRc">The Starry Night</div>
+                      <div class="cxzHyb">1889</div>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
             <script nonce="xmO6un4J9murPFDygFfaMA">(function(){var s='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExQWFhUXGRsbGBgYGB8eGxgYGSAXG\x3d';var ii=['_L_FkZ4qlAtyDwbkP49Pj0QU_63'];var r='';_setImagesSrc(ii,s,r);})();</script>
@@ -60,16 +64,20 @@ RSpec.describe HtmlParser do
         context "contains img data-src" do
           let(:artwork_html) do
             <<-HTML
-            <span>Artworks</span>
-            <div>
+            <div jsname="test">
               <div>
-                <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=Bedroom+in+Arles&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiArEsi02MCtO0lLKTrfTLMotLE3PiE4tKkJiZxSVW5flF2cWLWAWcUlOK8vNzFTLzFByLclKLAbk5OxpPAAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAV">
-                  <img class="taFZJe" alt="Bedroom in Arles" data-src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcScFSw_R642g88BNxROXma6X_J9MND_-6hjZa6BrYq1GNaHC8f3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
-                  <div class="KHK6lb">
-                    <div class="pgNMRc">Bedroom in Arles</div>
-                    <div class="cxzHyb">1888</div>
-                  </div>
-                </a>
+                <span>Artworks</span>
+              </div>
+              <div>
+                <div>
+                  <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=Bedroom+in+Arles&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiArEsi02MCtO0lLKTrfTLMotLE3PiE4tKkJiZxSVW5flF2cWLWAWcUlOK8vNzFTLzFByLclKLAbk5OxpPAAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAV">
+                    <img class="taFZJe" alt="Bedroom in Arles" data-src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcScFSw_R642g88BNxROXma6X_J9MND_-6hjZa6BrYq1GNaHC8f3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+                    <div class="KHK6lb">
+                      <div class="pgNMRc">Bedroom in Arles</div>
+                      <div class="cxzHyb">1888</div>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
             HTML
@@ -95,15 +103,19 @@ RSpec.describe HtmlParser do
         context "contains no extensions" do
           let(:artwork_html) do
             <<-HTML
-            <span>Artworks</span>
-            <div>
+            <div jsname="test">
               <div>
-                <a href="/search?test">
-                  <img id="imgid3" src="data:image/png;base64,AAA" />
-                  <div>
-                    <div>Artwork With No Extensions</div>
-                  </div>
-                </a>
+                <span>Artworks</span>
+              </div>
+              <div>
+                <div>
+                  <a href="/search?test">
+                    <img id="imgid3" src="data:image/png;base64,AAA" />
+                    <div>
+                      <div>Artwork With No Extensions</div>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
             HTML
@@ -119,17 +131,21 @@ RSpec.describe HtmlParser do
         context "contains multiple extensions" do
           let(:artwork_html) do
             <<-HTML
-            <span>Artworks</span>
-            <div>
+            <div jsname="test">
               <div>
-                <a href="/search?test">
-                  <img id="imgid2" src="data:image/png;base64,AAA" />
-                  <div>
-                    <div>Artwork With Two Extensions</div>
-                    <div>Medium</div>
-                    <div>Year</div>
-                  </div>
-                </a>
+                <span>Artworks</span>
+              </div>
+              <div>
+                <div>
+                  <a href="/search?test">
+                    <img id="imgid2" src="data:image/png;base64,AAA" />
+                    <div>
+                      <div>Artwork With Two Extensions</div>
+                      <div>Medium</div>
+                      <div>Year</div>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
             HTML
@@ -146,25 +162,29 @@ RSpec.describe HtmlParser do
         context "search results can contain multiple artworks" do
           let(:artwork_html) do
             <<-HTML
-            <span>Artworks</span>
-            <div>
+            <div jsname="test">
               <div>
-                <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=The+Starry+Night&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiBLFMzC3jC7WUspOt9Msyi0sTc-ITi0qQmJnFJVbl-UXZxYtYBUIyUhWCSxKLiioV_DLTM0oAdKX0-E4AAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAD">
-                  <img class="taFZJe" alt="The Starry Night" id="_L_FkZ4qlAtyDwbkP49Pj0QU_63" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
-                  <div class="KHK6lb">
-                    <div class="pgNMRc">The Starry Night</div>
-                    <div class="cxzHyb">1889</div>
-                  </div>
-                </a>
+                <span>Artworks</span>
               </div>
               <div>
-                <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=Bedroom+in+Arles&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiArEsi02MCtO0lLKTrfTLMotLE3PiE4tKkJiZxSVW5flF2cWLWAWcUlOK8vNzFTLzFByLclKLAbk5OxpPAAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAV">
-                  <img class="taFZJe" alt="Bedroom in Arles" data-src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcScFSw_R642g88BNxROXma6X_J9MND_-6hjZa6BrYq1GNaHC8f3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
-                  <div class="KHK6lb">
-                    <div class="pgNMRc">Bedroom in Arles</div>
-                    <div class="cxzHyb">1888</div>
-                  </div>
-                </a>
+                <div>
+                  <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=The+Starry+Night&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiBLFMzC3jC7WUspOt9Msyi0sTc-ITi0qQmJnFJVbl-UXZxYtYBUIyUhWCSxKLiioV_DLTM0oAdKX0-E4AAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAD">
+                    <img class="taFZJe" alt="The Starry Night" id="_L_FkZ4qlAtyDwbkP49Pj0QU_63" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
+                    <div class="KHK6lb">
+                      <div class="pgNMRc">The Starry Night</div>
+                      <div class="cxzHyb">1889</div>
+                    </div>
+                  </a>
+                </div>
+                <div>
+                  <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=Bedroom+in+Arles&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiArEsi02MCtO0lLKTrfTLMotLE3PiE4tKkJiZxSVW5flF2cWLWAWcUlOK8vNzFTLzFByLclKLAbk5OxpPAAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAV">
+                    <img class="taFZJe" alt="Bedroom in Arles" data-src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcScFSw_R642g88BNxROXma6X_J9MND_-6hjZa6BrYq1GNaHC8f3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+                    <div class="KHK6lb">
+                      <div class="pgNMRc">Bedroom in Arles</div>
+                      <div class="cxzHyb">1888</div>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
             <script nonce="xmO6un4J9murPFDygFfaMA">(function(){var s='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExQWFhUXGRsbGBgYGB8eGxgYGSAXG\x3d';var ii=['_L_FkZ4qlAtyDwbkP49Pj0QU_63'];var r='';_setImagesSrc(ii,s,r);})();</script>
@@ -208,20 +228,24 @@ RSpec.describe HtmlParser do
         context "html contains book search results" do
           let(:book_html) do
             <<-HTML
-            <span>Books</span>
-            <div>
+            <div jsname="test">
               <div>
-                <a href="/search?client=firefox-b-1-d&amp;sca_esv=7ce7144faa458147&amp;sxsrf=AHTn8zoEwNBGiIfsFDahq3jpdoxu1s8jbg:1747418641283&amp;q=The+Shining+(novel)&amp;stick=H4sIAAAAAAAAAONgFuLSz9U3yCqxNEgzVeIAsc2Ty4q0pLKTrfST8vOz9RNLSzLyi6xA7GKF_LycykWswiEZqQrBGZl5mXnpChp5-WWpOZoAO7LiS0oAAAA&amp;sa=X&amp;ved=2ahUKEwidyYzbyaiNAxWmEFkFHZFFM3sQ9OUBegQIUBAF">
-                  <wp-grid-tile class="JJw92">
-                    <div jsname="QRMGrb" class="olSdv">
-                      <img jsname="nWzOlc" class="d7ENZc" alt="" data-h="149" data-w="90" id="_EX4naN38EKah5NoPkYvN2Qc_89" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
-                    </div>
-                    <div class="TT9RUc uV10if">
-                      <div class="JjtOHd">The Shining</div>
-                      <div class="ellip yF4Rkc AqEFvb">1977</div>
-                    </div>
-                  </wp-grid-tile>
-                </a>
+                <span>Books</span>
+              </div>
+              <div>
+                <div>
+                  <a href="/search?client=firefox-b-1-d&amp;sca_esv=7ce7144faa458147&amp;sxsrf=AHTn8zoEwNBGiIfsFDahq3jpdoxu1s8jbg:1747418641283&amp;q=The+Shining+(novel)&amp;stick=H4sIAAAAAAAAAONgFuLSz9U3yCqxNEgzVeIAsc2Ty4q0pLKTrfST8vOz9RNLSzLyi6xA7GKF_LycykWswiEZqQrBGZl5mXnpChp5-WWpOZoAO7LiS0oAAAA&amp;sa=X&amp;ved=2ahUKEwidyYzbyaiNAxWmEFkFHZFFM3sQ9OUBegQIUBAF">
+                    <wp-grid-tile class="JJw92">
+                      <div jsname="QRMGrb" class="olSdv">
+                        <img jsname="nWzOlc" class="d7ENZc" alt="" data-h="149" data-w="90" id="_EX4naN38EKah5NoPkYvN2Qc_89" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
+                      </div>
+                      <div class="TT9RUc uV10if">
+                        <div class="JjtOHd">The Shining</div>
+                        <div class="ellip yF4Rkc AqEFvb">1977</div>
+                      </div>
+                    </wp-grid-tile>
+                  </a>
+                </div>
               </div>
             </div>
             <script nonce="D1fOy4rIvhmtRG4ODT-cdg">(function(){var s='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys\x3d';var ii=['_EX4naN38EKah5NoPkYvN2Qc_89'];_setImagesSrc(ii,s);})();</script>            
@@ -245,6 +269,78 @@ RSpec.describe HtmlParser do
           end
         end
       end
+
+      context "multiple media types" do
+        let(:html) do
+          <<-HTML
+          <div jsname="test-artworks">
+            <div>
+              <span>Artworks</span>
+            </div>
+            <div>
+              <div>
+                <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=The+Starry+Night&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiBLFMzC3jC7WUspOt9Msyi0sTc-ITi0qQmJnFJVbl-UXZxYtYBUIyUhWCSxKLiioV_DLTM0oAdKX0-E4AAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAD">
+                  <img class="taFZJe" alt="The Starry Night" id="_L_FkZ4qlAtyDwbkP49Pj0QU_63" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
+                  <div class="KHK6lb">
+                    <div class="pgNMRc">The Starry Night</div>
+                    <div class="cxzHyb">1889</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div jsname="test-books">
+            <div>
+              <span>Books</span>
+            </div>
+            <div>
+              <div>
+                <a href="/search?client=firefox-b-1-d&amp;sca_esv=7ce7144faa458147&amp;sxsrf=AHTn8zoEwNBGiIfsFDahq3jpdoxu1s8jbg:1747418641283&amp;q=The+Shining+(novel)&amp;stick=H4sIAAAAAAAAAONgFuLSz9U3yCqxNEgzVeIAsc2Ty4q0pLKTrfST8vOz9RNLSzLyi6xA7GKF_LycykWswiEZqQrBGZl5mXnpChp5-WWpOZoAO7LiS0oAAAA&amp;sa=X&amp;ved=2ahUKEwidyYzbyaiNAxWmEFkFHZFFM3sQ9OUBegQIUBAF">
+                  <wp-grid-tile class="JJw92">
+                    <div jsname="QRMGrb" class="olSdv">
+                      <img jsname="nWzOlc" class="d7ENZc" alt="" data-h="149" data-w="90" id="_EX4naN38EKah5NoPkYvN2Qc_89" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
+                    </div>
+                    <div class="TT9RUc uV10if">
+                      <div class="JjtOHd">The Shining</div>
+                      <div class="ellip yF4Rkc AqEFvb">1977</div>
+                    </div>
+                  </wp-grid-tile>
+                </a>
+              </div>
+            </div>
+          </div>
+          <script nonce="D1fOy4rIvhmtRG4ODT-cdg">(function(){var s='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys\x3d';var ii=['_EX4naN38EKah5NoPkYvN2Qc_89'];_setImagesSrc(ii,s);})();</script>            
+          <script nonce="xmO6un4J9murPFDygFfaMA">(function(){var s='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExQWFhUXGRsbGBgYGB8eGxgYGSAXG\x3d';var ii=['_L_FkZ4qlAtyDwbkP49Pj0QU_63'];var r='';_setImagesSrc(ii,s,r);})();</script>
+          HTML
+        end
+
+        it "returns a SearchResults object" do
+          results = HtmlParser.parse(html)
+          expect(results).to be_a(SearchResults)
+        end
+
+        it "parses artworks into results.artworks" do
+          results = HtmlParser.parse(html)
+          expect(results.artworks.length).to eq(1)
+          artwork = results.artworks.first
+          expect(artwork.name).to eq("The Starry Night")
+          expect(artwork.extensions).to include("1889")
+          expect(artwork.link).to eq("https://www.google.com/search?sca_esv=c2e426814f4d07e9&gl=us&hl=en&q=The+Starry+Night&stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiBLFMzC3jC7WUspOt9Msyi0sTc-ITi0qQmJnFJVbl-UXZxYtYBUIyUhWCSxKLiioV_DLTM0oAdKX0-E4AAAA&sa=X&ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAD")
+          expect(artwork.image).to eq("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExQWFhUXGRsbGBgYGB8eGxgYGSAXG=")
+          expect(artwork.image_id).to eq("_L_FkZ4qlAtyDwbkP49Pj0QU_63")
+        end
+
+        it "parses books into results.books" do
+          results = HtmlParser.parse(html)
+          expect(results.books.length).to eq(1)
+          book = results.books.first
+          expect(book.name).to eq("The Shining")
+          expect(book.extensions).to include("1977")
+          expect(book.link).to eq("https://www.google.com/search?client=firefox-b-1-d&sca_esv=7ce7144faa458147&sxsrf=AHTn8zoEwNBGiIfsFDahq3jpdoxu1s8jbg:1747418641283&q=The+Shining+(novel)&stick=H4sIAAAAAAAAAONgFuLSz9U3yCqxNEgzVeIAsc2Ty4q0pLKTrfST8vOz9RNLSzLyi6xA7GKF_LycykWswiEZqQrBGZl5mXnpChp5-WWpOZoAO7LiS0oAAAA&sa=X&ved=2ahUKEwidyYzbyaiNAxWmEFkFHZFFM3sQ9OUBegQIUBAF")
+          expect(book.image).to eq("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys=")
+          expect(book.image_id).to eq("_EX4naN38EKah5NoPkYvN2Qc_89")
+        end
+      end
     end
 
     context "html does not contain search results" do
@@ -253,17 +349,21 @@ RSpec.describe HtmlParser do
           context "missing href" do
             let(:artwork_html) do
               <<-HTML
-              <span>Artworks</span>
-              <div>
+              <div jsname="test">
                 <div>
-                  <a>
-                    <img id="imgid2" src="data:image/png;base64,AAA" />
-                    <div>
-                      <div>Artwork</div>
-                      <div>Medium</div>
-                      <div>Year</div>
-                    </div>
-                  </a>
+                  <span>Artworks</span>
+                </div>
+                <div>
+                  <div>
+                    <a>
+                      <img id="imgid2" src="data:image/png;base64,AAA" />
+                      <div>
+                        <div>Artwork</div>
+                        <div>Medium</div>
+                        <div>Year</div>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
               HTML
@@ -275,16 +375,20 @@ RSpec.describe HtmlParser do
           context "missing img tag" do
             let(:artwork_html) do
               <<-HTML
-              <span>Artworks</span>
-              <div>
+              <div jsname="test">
                 <div>
-                  <a href="/search?test">
-                    <div>
-                      <div>Artwork</div>
-                      <div>Medium</div>
-                      <div>Year</div>
-                    </div>
-                  </a>
+                  <span>Artworks</span>
+                </div>
+                <div>
+                  <div>
+                    <a href="/search?test">
+                      <div>
+                        <div>Artwork</div>
+                        <div>Medium</div>
+                        <div>Year</div>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
               HTML
@@ -296,15 +400,19 @@ RSpec.describe HtmlParser do
           context "missing img src or data-src" do
             let(:artwork_html) do
               <<-HTML
-              <span>Artworks</span>
-              <div>
+              <div jsname="test">
                 <div>
-                  <a href="/search?test">
-                    <img id="imgid2"/>
-                    <div>
-                      <div>Artwork</div>
-                    </div>
-                  </a>
+                  <span>Artworks</span>
+                </div>
+                <div>
+                  <div>
+                    <a href="/search?test">
+                      <img id="imgid2"/>
+                      <div>
+                        <div>Artwork</div>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
               HTML
@@ -316,13 +424,17 @@ RSpec.describe HtmlParser do
           context "missing name" do
             let(:artwork_html) do
               <<-HTML
-              <span>Artworks</span>
-              <div>
+              <div jsname="test">
                 <div>
-                  <a href="/search?test">
-                    <img id="imgid2" src="data:image/png;base64,AAA" />
-                    <div></div>
-                  </a>
+                  <span>Artworks</span>
+                </div>
+                <div>
+                  <div>
+                    <a href="/search?test">
+                      <img id="imgid2" src="data:image/png;base64,AAA" />
+                      <div></div>
+                    </a>
+                  </div>
                 </div>
               </div>
               HTML
@@ -335,16 +447,20 @@ RSpec.describe HtmlParser do
           context "contains img src but not script" do
             let(:artwork_html) do
               <<-HTML
-              <span>Artworks</span>
-              <div>
+              <div jsname="test">
                 <div>
-                  <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=The+Starry+Night&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiBLFMzC3jC7WUspOt9Msyi0sTc-ITi0qQmJnFJVbl-UXZxYtYBUIyUhWCSxKLiioV_DLTM0oAdKX0-E4AAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAD">
-                    <img class="taFZJe" alt="The Starry Night" id="_L_FkZ4qlAtyDwbkP49Pj0QU_63" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
-                    <div class="KHK6lb">
-                      <div class="pgNMRc">The Starry Night</div>
-                      <div class="cxzHyb">1889</div>
-                    </div>
-                  </a>
+                  <span>Artworks</span>
+                </div>
+                <div>
+                  <div>
+                    <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=The+Starry+Night&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiBLFMzC3jC7WUspOt9Msyi0sTc-ITi0qQmJnFJVbl-UXZxYtYBUIyUhWCSxKLiioV_DLTM0oAdKX0-E4AAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAD">
+                      <img class="taFZJe" alt="The Starry Night" id="_L_FkZ4qlAtyDwbkP49Pj0QU_63" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
+                      <div class="KHK6lb">
+                        <div class="pgNMRc">The Starry Night</div>
+                        <div class="cxzHyb">1889</div>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
               HTML
@@ -371,15 +487,19 @@ RSpec.describe HtmlParser do
         context "if not an artwork page" do
           let(:artwork_html) do
             <<-HTML
-            <span>Maps</span>
-            <div>
+            <div jsname="test">
               <div>
-                <a href="/search?test">
-                  <img id="imgid2" src="data:image/png;base64,AAA" />
-                  <div>
-                    <div>Artwork</div>
-                  </div>
-                </a>
+                <span>Maps</span>
+              </div>
+              <div>
+                <div>
+                  <a href="/search?test">
+                    <img id="imgid2" src="data:image/png;base64,AAA" />
+                    <div>
+                      <div>Artwork</div>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
             HTML
@@ -394,14 +514,18 @@ RSpec.describe HtmlParser do
           context "missing href" do
             let(:book_html) do
               <<-HTML
-              <span>Books</span>
-              <div>
+              <div jsname="test">
                 <div>
-                  <a>
-                    <img id="bookimg" src="data:image/png;base64,BOOK" />
-                    <div></div>
-                    <div>Book Title</div>
-                  </a>
+                  <span>Books</span>
+                </div>
+                <div>
+                  <div>
+                    <a>
+                      <img id="bookimg" src="data:image/png;base64,BOOK" />
+                      <div></div>
+                      <div>Book Title</div>
+                    </a>
+                  </div>
                 </div>
               </div>
               HTML
@@ -413,13 +537,17 @@ RSpec.describe HtmlParser do
           context "missing img tag" do
             let(:book_html) do
               <<-HTML
-              <span>Books</span>
-              <div>
+              <div jsname="test">
                 <div>
-                  <a href="/search?book">
-                    <div></div>
-                    <div>Book Title</div>
-                  </a>
+                  <span>Books</span>
+                </div>
+                <div>
+                  <div>
+                    <a href="/search?book">
+                      <div></div>
+                      <div>Book Title</div>
+                    </a>
+                  </div>
                 </div>
               </div>
               HTML
@@ -431,13 +559,17 @@ RSpec.describe HtmlParser do
           context "missing name" do
             let(:book_html) do
               <<-HTML
-              <span>Books</span>
-              <div>
+              <div jsname="test">
                 <div>
-                  <a href="/search?book=3">
-                    <img id="bookimg" src="data:image/png;base64,BOOK" />
-                    <div></div>
-                  </a>
+                  <span>Books</span>
+                </div>
+                <div>
+                  <div>
+                    <a href="/search?book=3">
+                      <img id="bookimg" src="data:image/png;base64,BOOK" />
+                      <div></div>
+                    </a>
+                  </div>
                 </div>
               </div>
               HTML
@@ -450,15 +582,19 @@ RSpec.describe HtmlParser do
           context "if not a book page" do
             let(:book_html) do
               <<-HTML
-              <span>Maps</span>
-              <div>
+              <div jsname="test">
                 <div>
-                  <a href="/search?test">
-                    <img id="imgid" src="data:image/png;base64,AAA" />
-                    <div>
-                      <div>Artwork</div>
-                    </div>
-                  </a>
+                  <span>Maps</span>
+                </div>
+                <div>
+                  <div>
+                    <a href="/search?test">
+                      <img id="imgid" src="data:image/png;base64,AAA" />
+                      <div>
+                        <div>Artwork</div>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
               HTML
@@ -472,15 +608,19 @@ RSpec.describe HtmlParser do
       context "if not a search result" do
         let(:artwork_html) do
           <<-HTML
-          <span>Maps</span>
-          <div>
+          <div jsname="test">
             <div>
-              <a href="/notsearch">
-                <img id="imgid2" src="data:image/png;base64,AAA" />
-                <div>
-                  <div>Artwork</div>
-                </div>
-              </a>
+              <span>Maps</span>
+            </div>
+            <div>
+              <div>
+                <a href="/notsearch">
+                  <img id="imgid2" src="data:image/png;base64,AAA" />
+                  <div>
+                    <div>Artwork</div>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
           HTML
