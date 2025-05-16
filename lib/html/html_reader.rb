@@ -10,7 +10,12 @@ class HtmlReader
   end
 end
 
-#search_results = HtmlReader.new.read('files\van-gogh-paintings.html')
-#search_results = HtmlReader.new.read('files\stephen-king-books.html')
-search_results = HtmlReader.new.read('files\rolling-stones-albums.html')
-JsonExporter.new.export(search_results)
+reader = HtmlReader.new
+painting_search_results = reader.read('files\van-gogh-paintings.html')
+book_search_results = reader.read('files\stephen-king-books.html')
+album_search_results = reader.read('files\rolling-stones-albums.html')
+
+exporter = JsonExporter.new
+exporter.export('files/painting-results.json', painting_search_results)
+exporter.export('files/book-results.json', book_search_results)
+exporter.export('files/album-results.json', album_search_results)

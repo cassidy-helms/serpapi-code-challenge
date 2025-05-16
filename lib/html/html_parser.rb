@@ -13,19 +13,18 @@ class HtmlParser
   def self.parse(html)
     results = SearchResults.new
 
+    type_map = {
+      ParseTypes::ARTWORKS => results.artworks,
+      ParseTypes::BOOKS => results.books,
+      ParseTypes::ALBUMS => results.albums
+    }
+
     Nokogiri::HTML.parse(html).css('span').each do |span|
       parse_type = determine_parse_type(span)
       next if parse_type.nil?
 
       items = parse_media(span)
-
-      if(parse_type == ParseTypes::ARTWORKS)
-        results.artworks.concat(items)
-      elsif(parse_type == ParseTypes::BOOKS)
-        results.books.concat(items)
-      elsif(parse_type == ParseTypes::ALBUMS)
-        results.albums.concat(items)
-      end
+      type_map[parse_type].concat(items) if type_map[parse_type]
     end
 
     results
@@ -35,16 +34,15 @@ class HtmlParser
     return ParseTypes::ARTWORKS if span.text.strip == Artwork.heading
     return ParseTypes::BOOKS if span.text.strip == Book.heading
     return ParseTypes::ALBUMS if span.text.strip == Album.heading
-
     nil
   end
   private_class_method :determine_parse_type
 
   def self.parse_media(span)
     parent_div = find_media_parent(span)
-
     items = []
-    parent_div.css('a').each {|a_tag| 
+
+    parent_div.css('a').each do |a_tag| 
       next unless a_tag['href'] =~ /\/search/
 
       link = a_tag['href']
@@ -63,7 +61,7 @@ class HtmlParser
       if [link, name, image].all? { |v| v.to_s.strip != "" }            
         items << Media.new(name, extensions, "https://www.google.com#{link}", image, image_id)
       end
-    }
+    end
 
     retrieve_image_ids(parent_div, items)
   end
@@ -79,15 +77,13 @@ class HtmlParser
   private_class_method :find_media_parent
 
   def self.retrieve_image_ids(html, items) 
-    items.each {|item|
+    items.each do |item|
       if item.image_id
-        doc = html.xpath("//script[contains(text(), '#{item.image_id}')]")
-        image_src = extract_source_variable_from_javascript_string(doc.text)
-        
+        script = html.xpath("//script[contains(text(), '#{item.image_id}')]")
+        image_src = extract_source_variable_from_javascript_string(script.text)
         item.image = image_src if image_src
       end
-    }
-
+    end
     items
   end
   private_class_method :retrieve_image_ids
