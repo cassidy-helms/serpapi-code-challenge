@@ -38,8 +38,8 @@ class HtmlParser
         div_texts = a_tag.css('div').map { |div| div.text.strip }
         non_blank_divs = div_texts.reject(&:empty?)
 
-        name = div_texts[1]
-        extensions = div_texts[2..].to_a.reject { |ext| ext.strip.empty? }
+        name = non_blank_divs[1]
+        extensions = non_blank_divs[2..].to_a.reject { |ext| ext.strip.empty? }
 
         image_tag = a_tag.at_css('img')
         image_src = image_tag['src'] if image_tag
