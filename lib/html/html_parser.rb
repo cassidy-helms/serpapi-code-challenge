@@ -1,5 +1,6 @@
 require_relative 'search_result_types/artwork'
 require_relative 'search_result_types/book'
+require_relative 'search_result_types/media'
 
 class HtmlParser
   module ParseTypes
@@ -30,7 +31,7 @@ class HtmlParser
   private_class_method :determine_parse_type
 
   def self.parse_media(html)
-      artworks = []
+      items = []
       Nokogiri::HTML.parse(html).css('div div a').each {|a_tag| 
         next unless a_tag['href'] =~ /\/search/
 
@@ -48,11 +49,11 @@ class HtmlParser
         image_id = image_tag['id'] if image_tag
     
         if [link, name, image].all? { |v| v.to_s.strip != "" }            
-          artworks << Artwork.new(name, extensions, "https://www.google.com#{link}", image, image_id)
+          items << Media.new(name, extensions, "https://www.google.com#{link}", image, image_id)
         end
       }
       
-      retrieve_image_ids(html, artworks)
+      retrieve_image_ids(html, items)
   end
   private_class_method :parse_media
 
