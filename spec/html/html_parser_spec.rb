@@ -4,6 +4,13 @@ require_relative '../../lib/html/search_result_types/artwork'
 require_relative '../../lib/html/search_result_types/search_results'
 
 RSpec.describe HtmlParser do
+  RSpec.shared_examples "returns empty artworks search results" do
+    it "returns empty artworks search results" do
+      results = HtmlParser.parse(artwork_html)
+      expect(results.artworks).to eq([])
+    end
+  end
+
   describe ".parse" do
     context "html contains search results" do
       context "artwork contains img src" do
@@ -83,10 +90,11 @@ RSpec.describe HtmlParser do
           <span>Artworks</span>
           <div>
             <div>
-              <a href="/search?test=3">
+              <a href="/search?test">
                 <img id="imgid3" src="data:image/png;base64,AAA" />
-                <div></div>
-                <div>Artwork With No Extensions</div>
+                <div>
+                  <div>Artwork With No Extensions</div>
+                </div>
               </a>
             </div>
           </div>
@@ -106,12 +114,13 @@ RSpec.describe HtmlParser do
           <span>Artworks</span>
           <div>
             <div>
-              <a href="/search?test=2">
+              <a href="/search?test">
                 <img id="imgid2" src="data:image/png;base64,AAA" />
-                <div></div>
-                <div>Artwork With Two Extensions</div>
-                <div>Medium</div>
-                <div>Year</div>
+                <div>
+                  <div>Artwork With Two Extensions</div>
+                  <div>Medium</div>
+                  <div>Year</div>
+                </div>
               </a>
             </div>
           </div>
@@ -187,10 +196,171 @@ RSpec.describe HtmlParser do
       end
     end
 
-    it "returns empty artworks if not an artwork page" do
-      html = "<span>Maps</span>"
-      results = HtmlParser.parse(html)
-      expect(results.artworks).to eq([])
+    context "html does not contain search results" do
+      context "artwork missing required fields" do
+        context "missing href" do
+          let(:artwork_html) do
+            <<-HTML
+            <span>Artworks</span>
+            <div>
+              <div>
+                <a>
+                  <img id="imgid2" src="data:image/png;base64,AAA" />
+                  <div>
+                    <div>Artwork</div>
+                    <div>Medium</div>
+                    <div>Year</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            HTML
+          end
+          
+          it_behaves_like "returns empty artworks search results"
+        end
+
+        context "missing img tag" do
+          let(:artwork_html) do
+            <<-HTML
+            <span>Artworks</span>
+            <div>
+              <div>
+                <a href="/search?test">
+                  <div>
+                    <div>Artwork</div>
+                    <div>Medium</div>
+                    <div>Year</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            HTML
+          end
+
+          it_behaves_like "returns empty artworks search results"
+        end
+          
+        context "missing img src or data-src" do
+          let(:artwork_html) do
+            <<-HTML
+            <span>Artworks</span>
+            <div>
+              <div>
+                <a href="/search?test">
+                  <img id="imgid2"/>
+                  <div>
+                    <div>Artwork</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            HTML
+          end
+
+          it_behaves_like "returns empty artworks search results"
+        end
+
+        context "missing name" do
+          let(:artwork_html) do
+            <<-HTML
+            <span>Artworks</span>
+            <div>
+              <div>
+                <a href="/search?test">
+                  <img id="imgid2" src="data:image/png;base64,AAA" />
+                  <div></div>
+                </a>
+              </div>
+            </div>
+            HTML
+          end
+
+          it_behaves_like "returns empty artworks search results"
+        end
+
+        # I am assuming the correct answer here is to return the src as the image, but if this was a real scenario, I would check if that is the desired outcome or possibly removing this entry from the returned artworks list
+        context "artwork contains img src but not script" do
+          let(:artwork_html) do
+            <<-HTML
+            <span>Artworks</span>
+            <div>
+              <div>
+                <a href="/search?sca_esv=c2e426814f4d07e9&amp;gl=us&amp;hl=en&amp;q=The+Starry+Night&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiBLFMzC3jC7WUspOt9Msyi0sTc-ITi0qQmJnFJVbl-UXZxYtYBUIyUhWCSxKLiioV_DLTM0oAdKX0-E4AAAA&amp;sa=X&amp;ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAD">
+                  <img class="taFZJe" alt="The Starry Night" id="_L_FkZ4qlAtyDwbkP49Pj0QU_63" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
+                  <div class="KHK6lb">
+                    <div class="pgNMRc">The Starry Night</div>
+                    <div class="cxzHyb">1889</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            HTML
+          end
+
+          it "returns a SearchResults object" do
+            results = HtmlParser.parse(artwork_html)
+            expect(results).to be_a(SearchResults)
+          end
+
+          it "parses artworks into results.artworks" do
+            results = HtmlParser.parse(artwork_html)
+            expect(results.artworks.length).to eq(1)
+            artwork = results.artworks.first
+            expect(artwork.name).to eq("The Starry Night")
+            expect(artwork.extensions).to include("1889")
+            expect(artwork.link).to eq("https://www.google.com/search?sca_esv=c2e426814f4d07e9&gl=us&hl=en&q=The+Starry+Night&stick=H4sIAAAAAAAAAONgFuLQz9U3MI_PNVLiBLFMzC3jC7WUspOt9Msyi0sTc-ITi0qQmJnFJVbl-UXZxYtYBUIyUhWCSxKLiioV_DLTM0oAdKX0-E4AAAA&sa=X&ved=2ahUKEwjK-K-JwLWKAxXcQTABHePpOFoQtq8DegQIMxAD")
+            expect(artwork.image).to eq("data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==")
+            expect(artwork.image_id).to eq("_L_FkZ4qlAtyDwbkP49Pj0QU_63")
+          end
+        end
+      end
+
+      context "if not an artwork page" do
+        let(:artwork_html) do
+          <<-HTML
+          <span>Maps</span>
+          <div>
+            <div>
+              <a href="/search?test">
+                <img id="imgid2" src="data:image/png;base64,AAA" />
+                <div>
+                  <div>Artwork</div>
+                </div>
+              </a>
+            </div>
+          </div>
+          HTML
+        end
+
+        it_behaves_like "returns empty artworks search results"
+      end
+
+      context "if not a search result" do
+        let(:artwork_html) do
+          <<-HTML
+          <span>Maps</span>
+          <div>
+            <div>
+              <a href="/notsearch">
+                <img id="imgid2" src="data:image/png;base64,AAA" />
+                <div>
+                  <div>Artwork</div>
+                </div>
+              </a>
+            </div>
+          </div>
+          HTML
+        end
+
+        it_behaves_like "returns empty artworks search results"
+      end
+
+      context "if html is empty" do
+        let(:artwork_html) { "" }
+
+        it_behaves_like "returns empty artworks search results"
+      end
     end
   end
 end

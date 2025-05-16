@@ -7,24 +7,24 @@ class HtmlParser
 
   def self.parse(html)
     results = SearchResults.new
-    parse_type = determineParseType(html)
+    parse_type = determine_parse_type(html)
 
     if(parse_type == ParseTypes::ARTWORKS)
-      results.artworks.concat(parseArtworks(html))
+      results.artworks.concat(parse_artworks(html))
     end
 
     results
   end
 
-  def self.determineParseType(html)
+  def self.determine_parse_type(html)
     Nokogiri::HTML.parse(html).css('span').each do |span|
       return ParseTypes::ARTWORKS if span.text.strip == Artwork.heading
     end
     nil
   end
-  private_class_method :determineParseType
+  private_class_method :determine_parse_type
 
-  def self.parseArtworks(html)
+  def self.parse_artworks(html)
       artworks = []
       Nokogiri::HTML.parse(html).css('div div a').each {|a_tag| 
         next unless a_tag['href'] =~ /\/search/
@@ -44,19 +44,24 @@ class HtmlParser
           artworks << Artwork.new(name, extensions, "https://www.google.com#{link}", image, image_id)
         end
       }
-
-      artworks.each {|artwork|
-        if artwork.image_id
-          doc = Nokogiri::HTML.parse(html).xpath("//script[contains(text(), '#{artwork.image_id}')]")
-          image_src = extract_source_variable_from_javascript_string(doc.text)
-          
-          artwork.image = image_src if image_src
-        end
-      }
-
-      artworks
+      
+      retrieve_artwork_image_ids(html, artworks)
   end
-  private_class_method :parseArtworks
+  private_class_method :parse_artworks
+
+  def self.retrieve_artwork_image_ids(html, artworks) 
+    artworks.each {|artwork|
+      if artwork.image_id
+        doc = Nokogiri::HTML.parse(html).xpath("//script[contains(text(), '#{artwork.image_id}')]")
+        image_src = extract_source_variable_from_javascript_string(doc.text)
+        
+        artwork.image = image_src if image_src
+      end
+    }
+
+    artworks
+  end
+  private_class_method :retrieve_artwork_image_ids
 
   def self.extract_source_variable_from_javascript_string(js_string)
     if js_string =~ /var\s+s\s*=\s*'([^']+)'/
