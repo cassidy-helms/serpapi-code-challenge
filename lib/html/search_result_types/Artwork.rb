@@ -18,10 +18,10 @@ class Artwork
   def to_h
     hash = {
       name: @name,
-      link: @link,
-      image: @image
+      link: @link
     }
     hash[:extensions] = @extensions unless @extensions.nil? || @extensions.empty?
+    hash[:image] = @image # could include in hash initialization, but wanted to preserve expected-array.json order
     hash
   end
 end
