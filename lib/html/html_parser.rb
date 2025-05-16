@@ -18,39 +18,35 @@ class HtmlParser
 
   def self.determineParseType(html)
     Nokogiri::HTML.parse(html).css('span').each do |span|
-      if(span.text.strip == Artwork.heading)
-        return parse_type = ParseTypes::ARTWORKS
-      end
+      return ParseTypes::ARTWORKS if span.text.strip == Artwork.heading
     end
     nil
   end
-  :private
+  private_class_method :determineParseType
 
   def self.parseArtworks(html)
       artworks = []
       Nokogiri::HTML.parse(html).css('div div a').each {|a_tag| 
-        if(a_tag['href'] =~ /\/search/)
-          link = a_tag['href']
+        next unless a_tag['href'] =~ /\/search/
 
-          div_texts = a_tag.css('div').map { |div| div.text.strip }
-          name = div_texts[1]
+        link = a_tag['href']
+        div_texts = a_tag.css('div').map { |div| div.text.strip }
+        name = div_texts[1]
+        extensions = div_texts[2..].to_a.reject { |ext| ext.strip.empty? }
 
-          extensions = div_texts[2..].to_a.reject { |ext| ext.strip.empty? }
-
-          image_tag = a_tag.at_css('img')
-          image_src = image_tag['src'] if image_tag
-          image_data_src = image_tag['data-src'] if image_tag
-          image = image_data_src || image_src
-          image_id = image_tag['id'] if image_tag
-     
-          if [link, name, image].all? { |v| v.to_s.strip != "" }            
-            artworks << Artwork.new(name, extensions, "https://www.google.com#{link}", image, image_id)
-          end
+        image_tag = a_tag.at_css('img')
+        image_src = image_tag['src'] if image_tag
+        image_data_src = image_tag['data-src'] if image_tag
+        image = image_data_src || image_src
+        image_id = image_tag['id'] if image_tag
+    
+        if [link, name, image].all? { |v| v.to_s.strip != "" }            
+          artworks << Artwork.new(name, extensions, "https://www.google.com#{link}", image, image_id)
         end
       }
 
       artworks.each {|artwork|
-        if(artwork.image_id)
+        if artwork.image_id
           doc = Nokogiri::HTML.parse(html).xpath("//script[contains(text(), '#{artwork.image_id}')]")
           image_src = extract_source_variable_from_javascript_string(doc.text)
           
@@ -58,9 +54,9 @@ class HtmlParser
         end
       }
 
-      return artworks
+      artworks
   end
-  :private
+  private_class_method :parseArtworks
 
   def self.extract_source_variable_from_javascript_string(js_string)
     if js_string =~ /var\s+s\s*=\s*'([^']+)'/
@@ -70,5 +66,5 @@ class HtmlParser
     end
     nil
   end
-  :private
+  private_class_method :extract_source_variable_from_javascript_string
 end
