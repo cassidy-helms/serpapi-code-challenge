@@ -16,11 +16,12 @@ class Artwork
   end
 
   def to_h
-    {
+    hash = {
       name: @name,
-      extensions: @extensions,
       link: @link,
       image: @image
     }
+    hash[:extensions] = @extensions unless @extensions.nil? || @extensions.empty?
+    hash
   end
 end

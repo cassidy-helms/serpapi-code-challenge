@@ -22,6 +22,7 @@ class HtmlParser
         return parse_type = ParseTypes::ARTWORKS
       end
     end
+    nil
   end
   :private
 
@@ -33,16 +34,16 @@ class HtmlParser
 
           div_texts = a_tag.css('div').map { |div| div.text.strip }
           name = div_texts[1]
-          extensions = div_texts[2..] || []
+
+          extensions = div_texts[2..].to_a.reject { |ext| ext.strip.empty? }
 
           image_tag = a_tag.at_css('img')
           image_src = image_tag['src'] if image_tag
           image_data_src = image_tag['data-src'] if image_tag
           image = image_data_src || image_src
           image_id = image_tag['id'] if image_tag
-
-          all_extensions_present = extensions.all? { |ext| ext.to_s.strip != "" }
-          if !extensions.empty? && all_extensions_present && [link, name, image].all? { |v| v.to_s.strip != "" }            
+     
+          if [link, name, image].all? { |v| v.to_s.strip != "" }            
             artworks << Artwork.new(name, extensions, "https://www.google.com#{link}", image, image_id)
           end
         end
@@ -63,7 +64,9 @@ class HtmlParser
 
   def self.extract_source_variable_from_javascript_string(js_string)
     if js_string =~ /var\s+s\s*=\s*'([^']+)'/
-      return $1
+      value = $1
+      value = value.gsub(/\\x([0-9A-Fa-f]{2})/) { [$1].pack("H2") }
+      return value
     end
     nil
   end
