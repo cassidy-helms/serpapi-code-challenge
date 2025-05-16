@@ -18,6 +18,13 @@ RSpec.describe HtmlParser do
     end
   end
 
+  RSpec.shared_examples "returns empty albums search results" do
+    it "returns albums books search results" do
+      results = HtmlParser.parse(album_html)
+      expect(results.albums).to eq([])
+    end
+  end
+
   describe ".parse" do
     context "html contains search results" do
       context "media type artwork" do
@@ -266,6 +273,51 @@ RSpec.describe HtmlParser do
             expect(book.link).to eq("https://www.google.com/search?client=firefox-b-1-d&sca_esv=7ce7144faa458147&sxsrf=AHTn8zoEwNBGiIfsFDahq3jpdoxu1s8jbg:1747418641283&q=The+Shining+(novel)&stick=H4sIAAAAAAAAAONgFuLSz9U3yCqxNEgzVeIAsc2Ty4q0pLKTrfST8vOz9RNLSzLyi6xA7GKF_LycykWswiEZqQrBGZl5mXnpChp5-WWpOZoAO7LiS0oAAAA&sa=X&ved=2ahUKEwidyYzbyaiNAxWmEFkFHZFFM3sQ9OUBegQIUBAF")
             expect(book.image).to eq("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys=")
             expect(book.image_id).to eq("_EX4naN38EKah5NoPkYvN2Qc_89")
+          end
+        end
+      end
+
+      context "media type albums" do
+        context "html contains album search results" do
+          let(:album_html) do
+            <<-HTML
+            <div jsname="test">
+              <div>
+                <span>Albums</span>
+              </div>
+              <div>
+                <div>
+                  <a href="/search?client=firefox-b-1-d&amp;sca_esv=7ce7144faa458147&amp;sxsrf=AHTn8zoCSHweW1_RiYR3JoPiH5sExdDdYg:1747425507859&amp;q=The+Rolling+Stones+Sticky+Fingers&amp;stick=H4sIAAAAAAAAAONgFuLQz9U3MM8tK1DiArEMM3IrjSu0xLOTrfRzS4szk_UTi0oyi0usEnOSSnOLF7EqhmSkKgTl5-Rk5qUrBJfk56UWA6nM5OxKBTegUGpRMQDofcRCVQAAAA&amp;sa=X&amp;ved=2ahUKEwjSiKul46iNAxWjEFkFHVdrMl0Q9OUBegQITBAD">
+                    <wp-grid-tile class="JJw92">
+                      <div jsname="QRMGrb" class="olSdv">
+                        <img jsname="nWzOlc" class="d7ENZc" alt="" data-h="90" data-w="90" id="_45gnaJKLNKOh5NoP19bJ6QU_90" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-deferred="1">
+                      </div>
+                      <div class="TT9RUc uV10if">
+                        <div class="JjtOHd">Sticky Fingers</div>
+                        <div class="ellip yF4Rkc AqEFvb">1971</div>
+                      </div>
+                    </wp-grid-tile>
+                  </a>
+                </div>
+              </div>
+              <script nonce="CxPhAa7IIoPl8fTeJtLezg">(function(){var id='z9PoV';document.getElementById(id).setAttribute("lta",Date.now());})();</script><script nonce="CxPhAa7IIoPl8fTeJtLezg">(function(){var s='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3//Z';var ii=['_45gnaJKLNKOh5NoP19bJ6QU_90'];_setImagesSrc(ii,s);})();</script>            </div>
+            HTML
+          end
+
+          it "returns a SearchResults object" do
+            results = HtmlParser.parse(album_html)
+            expect(results).to be_a(SearchResults)
+          end
+
+          it "parses books into results.books" do
+            results = HtmlParser.parse(album_html)
+            expect(results.albums.length).to eq(1)
+            album = results.albums.first
+            expect(album.name).to eq("Sticky Fingers")
+            expect(album.extensions).to include("1971")
+            expect(album.link).to eq("https://www.google.com/search?client=firefox-b-1-d&sca_esv=7ce7144faa458147&sxsrf=AHTn8zoCSHweW1_RiYR3JoPiH5sExdDdYg:1747425507859&q=The+Rolling+Stones+Sticky+Fingers&stick=H4sIAAAAAAAAAONgFuLQz9U3MM8tK1DiArEMM3IrjSu0xLOTrfRzS4szk_UTi0oyi0usEnOSSnOLF7EqhmSkKgTl5-Rk5qUrBJfk56UWA6nM5OxKBTegUGpRMQDofcRCVQAAAA&sa=X&ved=2ahUKEwjSiKul46iNAxWjEFkFHVdrMl0Q9OUBegQITBAD")
+            expect(album.image).to eq("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3//Z")
+            expect(album.image_id).to eq("_45gnaJKLNKOh5NoP19bJ6QU_90")
           end
         end
       end
@@ -601,6 +653,102 @@ RSpec.describe HtmlParser do
             end
 
             it_behaves_like "returns empty books search results"
+          end
+        end
+      end
+
+      context "media type album" do
+        context "album missing required fields" do
+          context "missing href" do
+            let(:album_html) do
+              <<-HTML
+              <div jsname="test">
+                <div>
+                  <span>Albums</span>
+                </div>
+                <div>
+                  <div>
+                    <a>
+                      <img id="albumimg" src="data:image/png;base64,ALBUM" />
+                      <div></div>
+                      <div>Album Title</div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              HTML
+            end
+
+            it_behaves_like "returns empty albums search results"
+          end
+
+          context "missing img tag" do
+            let(:album_html) do
+              <<-HTML
+              <div jsname="test">
+                <div>
+                  <span>Albums</span>
+                </div>
+                <div>
+                  <div>
+                    <a href="/search?album">
+                      <div></div>
+                      <div>Album Title</div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              HTML
+            end
+
+            it_behaves_like "returns empty albums search results"
+          end
+
+          context "missing name" do
+            let(:album_html) do
+              <<-HTML
+              <div jsname="test">
+                <div>
+                  <span>Albums</span>
+                </div>
+                <div>
+                  <div>
+                    <a href="/search?album">
+                      <img id="albumimg" src="data:image/png;base64,ALBUM" />
+                      <div></div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              HTML
+            end
+
+            it_behaves_like "returns empty albums search results"
+          end
+
+          
+          context "if not a album page" do
+            let(:album_html) do
+              <<-HTML
+              <div jsname="test">
+                <div>
+                  <span>Maps</span>
+                </div>
+                <div>
+                  <div>
+                    <a href="/search?test">
+                      <img id="imgid" src="data:image/png;base64,AAA" />
+                      <div>
+                        <div>Artwork</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              HTML
+            end
+
+            it_behaves_like "returns empty albums search results"
           end
         end
       end

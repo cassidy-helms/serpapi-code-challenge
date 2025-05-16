@@ -1,11 +1,13 @@
 require_relative 'search_result_types/artwork'
 require_relative 'search_result_types/book'
+require_relative 'search_result_types/album'
 require_relative 'search_result_types/media'
 
 class HtmlParser
   module ParseTypes
     ARTWORKS = 'Artworks',
-    BOOKS = 'Books'
+    BOOKS = 'Books',
+    ALBUMS = 'Albums'
   end
 
   def self.parse(html)
@@ -21,6 +23,8 @@ class HtmlParser
         results.artworks.concat(items)
       elsif(parse_type == ParseTypes::BOOKS)
         results.books.concat(items)
+      elsif(parse_type == ParseTypes::ALBUMS)
+        results.albums.concat(items)
       end
     end
 
@@ -30,6 +34,7 @@ class HtmlParser
   def self.determine_parse_type(span)
     return ParseTypes::ARTWORKS if span.text.strip == Artwork.heading
     return ParseTypes::BOOKS if span.text.strip == Book.heading
+    return ParseTypes::ALBUMS if span.text.strip == Album.heading
 
     nil
   end
