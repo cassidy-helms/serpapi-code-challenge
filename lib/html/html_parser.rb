@@ -85,7 +85,6 @@ class HtmlParser
     image, image_id = extract_image_info(image_tag)
 
     return unless [a_tag['href'], name, image].all? { |v| v.to_s.strip != '' }
-
     Media.new(name, extensions, "https://www.google.com#{a_tag['href']}", image, image_id)
   end
   private_class_method :build_media_from_a_tag
@@ -97,7 +96,7 @@ class HtmlParser
   def self.is_search_link?(a_tag)
     a_tag['href'] =~ %r{/search}
   end
-  private_class_method :valid_media_link?
+  private_class_method :is_search_link?
 
   # Extracts the name and extensions from an <a> tag's child <div> elements.
   #
@@ -114,9 +113,15 @@ class HtmlParser
   end
   private_class_method :extract_name_and_extensions
 
+  # Extracts the image URL and image ID from an <img> tag.
+  #
+  # Prefers the 'data-src' attribute for the image URL, falling back to 'src' if not present.
+  # Returns nil values if the image tag is missing.
+  #
+  # @param image_tag [Nokogiri::XML::Element, nil] the <img> tag to extract info from
+  # @return [Array] an array with the image URL (String or nil) and image ID (String or nil)
   def self.extract_image_info(image_tag)
     return [nil, nil] unless image_tag
-
     image = image_tag['data-src'] || image_tag['src']
     image_id = image_tag['id']
     [image, image_id]
