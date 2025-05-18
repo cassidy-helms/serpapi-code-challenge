@@ -8,7 +8,7 @@
 class Artwork
   @heading = 'Artworks'
 
-  def self.heading
-    @heading
+  class << self
+    attr_reader :heading
   end
 end

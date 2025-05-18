@@ -8,7 +8,7 @@
 class Album
   @heading = 'Albums'
 
-  def self.heading
-    @heading
+  class << self
+    attr_reader :heading
   end
 end

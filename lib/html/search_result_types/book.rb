@@ -8,7 +8,7 @@
 class Book
   @heading = 'Books'
 
-  def self.heading
-    @heading
+  class << self
+    attr_reader :heading
   end
 end
