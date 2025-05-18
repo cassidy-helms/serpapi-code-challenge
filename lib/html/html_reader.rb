@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 require_relative 'html_parser'
 require_relative 'json/json_exporter'

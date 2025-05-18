@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'search_result_types/artwork'
 require_relative 'search_result_types/book'
 require_relative 'search_result_types/album'
@@ -5,9 +7,9 @@ require_relative 'search_result_types/media'
 
 class HtmlParser
   module ParseTypes
-    ARTWORKS = 'Artworks',
-    BOOKS = 'Books',
-    ALBUMS = 'Albums'
+    ARTWORKS = ['Artworks',
+                BOOKS = 'Books',
+                ALBUMS = 'Albums'].freeze
   end
 
   def self.parse(html)
@@ -24,7 +26,7 @@ class HtmlParser
       next if parse_type.nil?
 
       items = parse_media(span)
-      type_map[parse_type].concat(items) if type_map[parse_type]
+      type_map[parse_type]&.concat(items)
     end
 
     results
@@ -34,6 +36,7 @@ class HtmlParser
     return ParseTypes::ARTWORKS if span.text.strip == Artwork.heading
     return ParseTypes::BOOKS if span.text.strip == Book.heading
     return ParseTypes::ALBUMS if span.text.strip == Album.heading
+
     nil
   end
   private_class_method :determine_parse_type
@@ -42,8 +45,8 @@ class HtmlParser
     parent_div = find_media_parent(span)
     items = []
 
-    parent_div.css('a').each do |a_tag| 
-      next unless a_tag['href'] =~ /\/search/
+    parent_div.css('a').each do |a_tag|
+      next unless a_tag['href'] =~ %r{/search}
 
       link = a_tag['href']
       div_texts = a_tag.css('div').map { |div| div.text.strip }
@@ -57,8 +60,8 @@ class HtmlParser
       image_data_src = image_tag['data-src'] if image_tag
       image = image_data_src || image_src
       image_id = image_tag['id'] if image_tag
-  
-      if [link, name, image].all? { |v| v.to_s.strip != "" }            
+
+      if [link, name, image].all? { |v| v.to_s.strip != '' }
         items << Media.new(name, extensions, "https://www.google.com#{link}", image, image_id)
       end
     end
@@ -69,20 +72,18 @@ class HtmlParser
 
   def self.find_media_parent(span)
     section_div = span
-    while section_div && (!section_div.name.eql?('div') || !section_div['jsname'])
-      section_div = section_div.parent
-    end
+    section_div = section_div.parent while section_div && (!section_div.name.eql?('div') || !section_div['jsname'])
     section_div
   end
   private_class_method :find_media_parent
 
-  def self.retrieve_image_ids(html, items) 
+  def self.retrieve_image_ids(html, items)
     items.each do |item|
-      if item.image_id
-        script = html.xpath("//script[contains(text(), '#{item.image_id}')]")
-        image_src = extract_source_variable_from_javascript_string(script.text)
-        item.image = image_src if image_src
-      end
+      next unless item.image_id
+
+      script = html.xpath("//script[contains(text(), '#{item.image_id}')]")
+      image_src = extract_source_variable_from_javascript_string(script.text)
+      item.image = image_src if image_src
     end
     items
   end
@@ -90,8 +91,8 @@ class HtmlParser
 
   def self.extract_source_variable_from_javascript_string(js_string)
     if js_string =~ /var\s+s\s*=\s*'([^']+)'/
-      value = $1
-      value = value.gsub(/\\x([0-9A-Fa-f]{2})/) { [$1].pack("H2") }
+      value = ::Regexp.last_match(1)
+      value = value.gsub(/\\x([0-9A-Fa-f]{2})/) { [::Regexp.last_match(1)].pack('H2') }
       return value
     end
     nil

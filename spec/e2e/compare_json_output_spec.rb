@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'nokogiri'
 
@@ -6,12 +8,12 @@ require_relative '../../lib/html/search_result_types/artwork'
 require_relative '../../lib/html/search_result_types/search_results'
 
 RSpec.describe HtmlParser do
-  describe "end-to-end parsing" do
-    let(:html_path) { File.expand_path("files/van-gogh-paintings.html", __dir__) }
-    let(:expected_json_path) { File.expand_path("files/expected-array.json", __dir__) }
-    let(:results_json_path) { File.expand_path("files/results.json", __dir__) }
+  describe 'end-to-end parsing' do
+    let(:html_path) { File.expand_path('files/van-gogh-paintings.html', __dir__) }
+    let(:expected_json_path) { File.expand_path('files/expected-array.json', __dir__) }
+    let(:results_json_path) { File.expand_path('files/results.json', __dir__) }
 
-    it "parses HTML and matches expected results" do
+    it 'parses HTML and matches expected results' do
       html = File.read(html_path)
       expected = JSON.parse(File.read(expected_json_path))
       results = HtmlParser.parse(html)

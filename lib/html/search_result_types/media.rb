@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Media
   attr_reader :name, :extensions, :link, :image, :image_id
   attr_accessor :image
