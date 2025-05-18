@@ -5,6 +5,11 @@ require_relative 'search_result_types/book'
 require_relative 'search_result_types/album'
 require_relative 'search_result_types/media'
 
+# HtmlParser parses HTML content and extracts structured search results
+# for various media types
+#
+# Usage:
+#   results = HtmlParser.parse(html_string)
 class HtmlParser
   module ParseTypes
     ARTWORKS = ['Artworks',
@@ -12,6 +17,10 @@ class HtmlParser
                 ALBUMS = 'Albums'].freeze
   end
 
+  # Parses the given HTML and returns a SearchResults object.
+  #
+  # @param html [String] the HTML content to parse
+  # @return [SearchResults] the parsed search results
   def self.parse(html)
     results = SearchResults.new
 
@@ -32,6 +41,10 @@ class HtmlParser
     results
   end
 
+  # Determines the parse type for a given span element.
+  #
+  # @param span [Nokogiri::XML::Element] the span element
+  # @return [String, nil] the parse type or nil if not recognized
   def self.determine_parse_type(span)
     return ParseTypes::ARTWORKS if span.text.strip == Artwork.heading
     return ParseTypes::BOOKS if span.text.strip == Book.heading
@@ -41,6 +54,10 @@ class HtmlParser
   end
   private_class_method :determine_parse_type
 
+  # Parses media items for the given span.
+  #
+  # @param span [Nokogiri::XML::Element] the span element
+  # @return [Array<Media>] the parsed media items
   def self.parse_media(span)
     parent_div = find_media_parent(span)
     items = []
@@ -70,6 +87,10 @@ class HtmlParser
   end
   private_class_method :parse_media
 
+  # Finds the parent div with a jsname attribute for the given span.  This div indicates where the actual media items will be located in the html file
+  #
+  # @param span [Nokogiri::XML::Element] the span element
+  # @return [Nokogiri::XML::Element, nil] the parent div or nil
   def self.find_media_parent(span)
     section_div = span
     section_div = section_div.parent while section_div && (!section_div.name.eql?('div') || !section_div['jsname'])
@@ -77,6 +98,12 @@ class HtmlParser
   end
   private_class_method :find_media_parent
 
+  # Updates image paths for items if the img contained an id
+  # Img tags with an id have a thumbnail path in a corresponding script tag further down the html file
+  #
+  # @param html [Nokogiri::XML::Element] the HTML section to search for scripts
+  # @param items [Array<Media>] the media items to update
+  # @return [Array<Media>] the updated media items
   def self.retrieve_image_ids(html, items)
     items.each do |item|
       next unless item.image_id
@@ -89,6 +116,10 @@ class HtmlParser
   end
   private_class_method :retrieve_image_ids
 
+  # Extracts the image source variable from a JavaScript string. Also decodes unicode in the string.
+  #
+  # @param js_string [String] the JavaScript string
+  # @return [String, nil] the extracted image source or nil
   def self.extract_source_variable_from_javascript_string(js_string)
     if js_string =~ /var\s+s\s*=\s*'([^']+)'/
       value = ::Regexp.last_match(1)
