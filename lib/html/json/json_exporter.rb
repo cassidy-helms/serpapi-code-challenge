@@ -10,7 +10,6 @@ require 'json'
 #
 # The object passed to #export must respond to #to_h.
 class JsonExporter
-
   # Writes the given object's hash representation to the specified file as JSON.
   #
   # @param output_path [String] the file path to write the JSON output

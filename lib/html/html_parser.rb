@@ -32,12 +32,10 @@ class HtmlParser
 
     Nokogiri::HTML.parse(html).css('span').each do |span|
       parse_type = determine_parse_type(span)
-      next if parse_type.nil?
+      next unless type_map[parse_type]
 
-      items = parse_media(span)
-      type_map[parse_type]&.concat(items)
+      type_map[parse_type]&.concat(parse_media(span))
     end
-
     results
   end
 
@@ -56,36 +54,74 @@ class HtmlParser
 
   # Parses media items for the given span.
   #
-  # @param span [Nokogiri::XML::Element] the span element
-  # @return [Array<Media>] the parsed media items
+  # This method locates the parent div (with a jsname attribute) for the given span,
+  # then extracts all valid media items (artworks, books, or albums) from <a> tags within that div.
+  # If an image_id is present, it attempts to update the image URL from a corresponding script tag.
+  #
+  # @param span [Nokogiri::XML::Element] the span element indicating the media section
+  # @return [Array<Media>] the parsed media items for this section
   def self.parse_media(span)
     parent_div = find_media_parent(span)
-    items = []
+    return [] unless parent_div
 
-    parent_div.css('a').each do |a_tag|
-      next unless a_tag['href'] =~ %r{/search}
-
-      link = a_tag['href']
-      div_texts = a_tag.css('div').map { |div| div.text.strip }
-      non_blank_divs = div_texts.reject(&:empty?)
-
-      name = non_blank_divs[1]
-      extensions = non_blank_divs[2..].to_a.reject { |ext| ext.strip.empty? }
-
-      image_tag = a_tag.at_css('img')
-      image_src = image_tag['src'] if image_tag
-      image_data_src = image_tag['data-src'] if image_tag
-      image = image_data_src || image_src
-      image_id = image_tag['id'] if image_tag
-
-      if [link, name, image].all? { |v| v.to_s.strip != '' }
-        items << Media.new(name, extensions, "https://www.google.com#{link}", image, image_id)
-      end
-    end
-
+    items = parent_div.css('a').filter_map { |a_tag| build_media_from_a_tag(a_tag) }
     retrieve_image_ids(parent_div, items)
   end
   private_class_method :parse_media
+
+
+  # Builds a Media object from an <a> tag if it contains valid media information.
+  #
+  # Extracts the name, extensions, image, and image_id from the <a> tag's child elements.
+  # Only returns a Media object if the <a> tag has a valid href, name, and image.
+  #
+  # @param a_tag [Nokogiri::XML::Element] the <a> tag containing media info
+  # @return [Media, nil] the constructed Media object, or nil if required fields are missing
+  def self.build_media_from_a_tag(a_tag)
+    return unless is_search_link?(a_tag)
+
+    name, extensions = extract_name_and_extensions(a_tag)
+    image_tag = a_tag.at_css('img')
+    image, image_id = extract_image_info(image_tag)
+
+    return unless [a_tag['href'], name, image].all? { |v| v.to_s.strip != '' }
+
+    Media.new(name, extensions, "https://www.google.com#{a_tag['href']}", image, image_id)
+  end
+  private_class_method :build_media_from_a_tag
+
+  # Checks if the given <a> tag is for a search
+  #
+  # @param a_tag [Nokogiri::XML::Element] the <a> tag to check
+  # @return [Boolean] true if the link is valid, false otherwise
+  def self.is_search_link?(a_tag)
+    a_tag['href'] =~ %r{/search}
+  end
+  private_class_method :valid_media_link?
+
+  # Extracts the name and extensions from an <a> tag's child <div> elements.
+  #
+  # The first non-blank <div> is ignored, the second is used as the name,
+  # and any subsequent non-blank <div>s are collected as extensions.
+  #
+  # @param a_tag [Nokogiri::XML::Element] the <a> tag containing media info
+  # @return [Array] an array with the name (String or nil) and extensions (Array of Strings)
+  def self.extract_name_and_extensions(a_tag)
+    div_texts = a_tag.css('div').map { |div| div.text.strip }.reject(&:empty?)
+    name = div_texts[1]
+    extensions = div_texts[2..].to_a.reject { |ext| ext.strip.empty? }
+    [name, extensions]
+  end
+  private_class_method :extract_name_and_extensions
+
+  def self.extract_image_info(image_tag)
+    return [nil, nil] unless image_tag
+
+    image = image_tag['data-src'] || image_tag['src']
+    image_id = image_tag['id']
+    [image, image_id]
+  end
+  private_class_method :extract_image_info
 
   # Finds the parent div with a jsname attribute for the given span.  This div indicates where the actual media items will be located in the html file
   #
