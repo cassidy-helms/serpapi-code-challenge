@@ -6,9 +6,9 @@
 #   book = Book.new(name, extensions, link, image, image_id)
 #   heading = Book.heading
 class Book
-  @@heading = 'Books'
+  @heading = 'Books'
 
   def self.heading
-    @@heading
+    @heading
   end
 end

@@ -78,13 +78,14 @@ class HtmlParser
   # @param a_tag [Nokogiri::XML::Element] the <a> tag containing media info
   # @return [Media, nil] the constructed Media object, or nil if required fields are missing
   def self.build_media_from_a_tag(a_tag)
-    return unless is_search_link?(a_tag)
+    return unless search_link?(a_tag)
 
     name, extensions = extract_name_and_extensions(a_tag)
     image_tag = a_tag.at_css('img')
     image, image_id = extract_image_info(image_tag)
 
     return unless [a_tag['href'], name, image].all? { |v| v.to_s.strip != '' }
+
     Media.new(name, extensions, "https://www.google.com#{a_tag['href']}", image, image_id)
   end
   private_class_method :build_media_from_a_tag
@@ -93,10 +94,10 @@ class HtmlParser
   #
   # @param a_tag [Nokogiri::XML::Element] the <a> tag to check
   # @return [Boolean] true if the link is valid, false otherwise
-  def self.is_search_link?(a_tag)
+  def self.search_link?(a_tag)
     a_tag['href'] =~ %r{/search}
   end
-  private_class_method :is_search_link?
+  private_class_method :search_link?
 
   # Extracts the name and extensions from an <a> tag's child <div> elements.
   #
@@ -122,13 +123,15 @@ class HtmlParser
   # @return [Array] an array with the image URL (String or nil) and image ID (String or nil)
   def self.extract_image_info(image_tag)
     return [nil, nil] unless image_tag
+
     image = image_tag['data-src'] || image_tag['src']
     image_id = image_tag['id']
     [image, image_id]
   end
   private_class_method :extract_image_info
 
-  # Finds the parent div with a jsname attribute for the given span.  This div indicates where the actual media items will be located in the html file
+  # Finds the parent div with a jsname attribute for the given span.
+  # This div indicates where the actual media items will be located in the html file
   #
   # @param span [Nokogiri::XML::Element] the span element
   # @return [Nokogiri::XML::Element, nil] the parent div or nil

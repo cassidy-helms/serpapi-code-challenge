@@ -15,7 +15,7 @@
 #   - image: The image URL or data for the media item.
 #   - image_id: The HTML id attribute for the image, if present.
 class Media
-  attr_reader :name, :extensions, :link, :image, :image_id
+  attr_reader :name, :extensions, :link, :image_id
   attr_accessor :image
 
   def initialize(name, extensions, link, image, image_id)

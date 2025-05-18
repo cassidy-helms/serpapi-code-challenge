@@ -6,9 +6,9 @@
 #   artwork = Artwork.new(name, extensions, link, image, image_id)
 #   heading = Artwork.heading
 class Artwork
-  @@heading = 'Artworks'
+  @heading = 'Artworks'
 
   def self.heading
-    @@heading
+    @heading
   end
 end

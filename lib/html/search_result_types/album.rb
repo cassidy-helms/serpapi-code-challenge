@@ -6,9 +6,9 @@
 #   album = Album.new(name, extensions, link, image, image_id)
 #   heading = Album.heading
 class Album
-  @@heading = 'Albums'
+  @heading = 'Albums'
 
   def self.heading
-    @@heading
+    @heading
   end
 end
